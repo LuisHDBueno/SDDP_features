@@ -42,15 +42,13 @@ function identify_policy_graph(graph::SDDP.PolicyGraph)
     return "linear"
 end
 
-function get_linear_graph(policy_graph::SDDP.PolicyGraph)
+function get_linear_graph(policy_graph::SDDP.PolicyGraph, belief_lipschitz::Vector{Vector{Float64}})
     root_node = policy_graph.root_node
     nodes = policy_graph.nodes
 
     belief_partition = policy_graph.belief_partition
     # Converta Set{Int64} para Vector{Int64}
     belief_partition_vec = [collect(partition) for partition in belief_partition]
-    belief_lipschitz = [fill(1.0, length(partition)) for partition in belief_partition_vec]  # Preenche com valores padrão
-    
     
     edges = Vector{Tuple{Pair{Int64, Int64}, Float64}}()
     for node in nodes
@@ -73,19 +71,19 @@ function get_linear_graph(policy_graph::SDDP.PolicyGraph)
     
 end
 
-function get_cycle_linear_graph(graph::SDDP.PolicyGraph)
+function get_cycle_linear_graph(graph::SDDP.PolicyGraph, belief_lipschitz::Vector{Vector{Float64}})
     println(identify_policy_graph(graph))
 end
 
 
-function get_graph(graph::SDDP.PolicyGraph)
+function get_graph(graph::SDDP.PolicyGraph, belief_lipschitz::Vector{Vector{Float64}})
     type = identify_policy_graph(graph)
 
     if type == "linear"
-        get_linear_graph(graph)
+        get_linear_graph(graph, belief_lipschitz)
 
     elseif type == "cycle"
-        get_cycle_linear_graph(graph)
+        get_cycle_linear_graph(graph, belief_lipschitz)
     end
 
 end

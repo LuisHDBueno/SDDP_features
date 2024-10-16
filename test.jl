@@ -19,7 +19,12 @@ function test_linear_policy_graph()
             end
         end
     end
-    get_graph(model)
+
+    belief_partition = model.belief_partition
+    belief_partition_vec = [collect(partition) for partition in belief_partition]
+    belief_lipschitz = [fill(1.0, length(partition)) for partition in belief_partition_vec]  # Preenche com valores padrão
+    
+    get_graph(model, belief_lipschitz)
 end
 
 test_linear_policy_graph()
